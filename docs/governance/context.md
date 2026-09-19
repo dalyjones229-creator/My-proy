@@ -327,16 +327,16 @@ sin `SELECT *`, evitar N+1, mappers explícitos.
 
 | id | nombre | precio (COP) | categoría | piel recomendada | stock | lote |
 |---|---|---|---|---|---|---|
-| p1 | Jabon de Lavanda | 18000 | soap | sensitive | 12 | LOT-LAV-01 |
-| p2 | Jabon de Carbon Activado | 22000 | soap | oily | 8 | LOT-CAR-01 |
-| p3 | Jabon de Avena y Miel | 19500 | soap | dry | **0** (agotado) | LOT-AVE-01 |
-| p4 | Balsamo de Cacao | 15500 | lip_balm | all | 20 | LOT-BAL-01 |
-| p5 | Jabon de Calendula | 17500 | soap | sensitive | 15 | LOT-CAL-01 |
-| p6 | Jabon de Menta | 18500 | soap | combination | 10 | LOT-MEN-01 |
-| p7 | Jabon de Rosas | 21000 | soap | dry | 6 | LOT-ROS-01 |
-| p8 | Manteca de Karite | 24500 | body_butter | all | 9 | LOT-KAR-01 |
-| p9 | Shampoo Solido | 23000 | shampoo_bar | normal | 11 | LOT-SHA-01 |
-| p10 | Jabon Exfoliante de Cafe | 20000 | soap | oily | 7 | LOT-CFE-01 |
+| p1 | Jabon de Lavanda | 850 | soap | sensitive | 12 | LOT-LAV-01 |
+| p2 | Jabon de Carbon Activado | 950 | soap | oily | 8 | LOT-CAR-01 |
+| p3 | Jabon de Avena y Miel | 900 | soap | dry | **0** (agotado) | LOT-AVE-01 |
+| p4 | Balsamo de Cacao | 720 | lip_balm | all | 20 | LOT-BAL-01 |
+| p5 | Jabon de Calendula | 780 | soap | sensitive | 15 | LOT-CAL-01 |
+| p6 | Jabon de Menta | 800 | soap | combination | 10 | LOT-MEN-01 |
+| p7 | Jabon de Rosas | 990 | soap | dry | 6 | LOT-ROS-01 |
+| p8 | Manteca de Karite | 1200 | body_butter | all | 9 | LOT-KAR-01 |
+| p9 | Shampoo Solido | 1100 | shampoo_bar | normal | 11 | LOT-SHA-01 |
+| p10 | Jabon Exfoliante de Cafe | 1050 | soap | oily | 7 | LOT-CFE-01 |
 
 Todos `handmade: true`, `active: true`, e imágenes SVG en `PRODUCT_IMAGES`.
 `p3` demuestra el flujo "agotado" (badge y botón deshabilitado + filtro "En stock").
