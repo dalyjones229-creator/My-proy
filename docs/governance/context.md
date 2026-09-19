@@ -79,8 +79,10 @@ soap-ecommerce/
 ├── README.md
 ├── docs/governance/
 │   ├── context.md                   # ESTE documento
+│   ├── features.md                  # INVENTARIO VIVO de funcionalidades + criterios BDD (mantiene DocSync-Agent)
 │   ├── rules.md                     # Reglas estrictas de desarrollo
 │   └── agents/system-prompts.md     # Roles de los 4 agentes
+├── .opencode/skills/docsync-agent/SKILL.md  # Skill DocSync-Agent (documentación viva)
 ├── .opencode/agent/                 # Agentes opencode (proyecto)
 │   ├── tech-leader.md (primary)     frontend-dev.md · coding-agent.md · qa.md · devops.md
 ├── public/                          # FRONTEND (estático)
