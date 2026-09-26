@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jabones del Bosque · Cosmética Natural &amp; Artesanal</title>
+    <meta
+      name="description"
+      content="Jabones artesanales, bálsamos y cosmética elaborada a mano con ingredientes naturales. Catálogo, proceso y contacto en Jabones del Bosque."
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -14,9 +18,11 @@
                 50: "#f6f1e7",
                 100: "#eef3ea",
                 200: "#d9e8d4",
+                300: "#bcd4b6",
                 600: "#4b7b53",
                 700: "#355a3c",
                 800: "#2c4631",
+                900: "#22331f",
               },
             },
             fontFamily: {
@@ -26,106 +32,534 @@
         },
       };
     </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+      }
+    </style>
   </head>
-  <body class="bg-stone-50 text-stone-800 font-sans min-h-screen">
+  <body class="bg-stone-50 text-stone-800 font-sans antialiased">
     <header
-      class="sticky top-0 z-20 bg-gradient-to-r from-brand-800 via-brand-600 to-emerald-700 text-white flex justify-between items-center px-6 py-4 shadow-lg"
+      id="nav"
+      class="fixed top-0 inset-x-0 z-30 transition-all duration-300"
     >
-      <div class="flex items-center gap-3">
-        <span
-          class="text-3xl drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
-          aria-hidden="true"
-          >🌿</span
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="#inicio" class="flex items-center gap-2 text-white">
+          <span class="text-2xl" aria-hidden="true">🌿</span>
+          <span class="font-extrabold tracking-tight">Jabones del Bosque</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm text-white/90">
+          <a href="#valores" class="hover:text-amber-200 transition">Propuesta</a>
+          <a href="#catalogo" class="hover:text-amber-200 transition">Catalogo</a>
+          <a href="#proceso" class="hover:text-amber-200 transition">Proceso</a>
+          <a href="#faq" class="hover:text-amber-200 transition">Preguntas</a>
+        </nav>
+        <a
+          href="#contacto"
+          class="rounded-full bg-amber-200 text-brand-900 px-4 py-2 font-semibold text-sm hover:bg-amber-100 transition"
         >
-        <div>
-          <h1
-            class="text-xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-amber-200 via-yellow-100 to-emerald-200 bg-clip-text text-transparent"
-          >
-            Jabones del Bosque
-          </h1>
-          <p
-            class="text-[11px] uppercase tracking-[0.22em] text-amber-100/90"
-          >
-            Cosmética natural &amp; artesanal
-          </p>
-        </div>
+          Contactanos
+        </a>
       </div>
-      <button
-        id="cartBtn"
-        class="bg-white text-brand-700 rounded-full px-4 py-2 font-semibold flex items-center gap-2 hover:bg-brand-100 transition"
-        aria-label="Abrir carrito"
-      >
-        <span>🛒</span>
-        <span id="cartCount">0</span>
-        <span
-          id="cartTotal"
-          class="bg-brand-600 text-white rounded-full px-2 py-0.5 text-xs"
-          >$0</span
-        >
-      </button>
     </header>
 
-    <section
-      class="bg-white border-b border-stone-200 px-6 py-4 flex flex-wrap items-center gap-4"
-    >
-      <input
-        id="search"
-        type="search"
-        placeholder="Buscar jabones..."
-        class="flex-1 min-w-[220px] border border-stone-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-600"
-      />
-      <select
-        id="skin"
-        class="border border-stone-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-600"
+    <main>
+      <section
+        id="inicio"
+        class="relative min-h-[92vh] flex items-center overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-emerald-900"
       >
-        <option value="">Todo tipo de piel</option>
-        <option value="dry">Seca</option>
-        <option value="oily">Grasa</option>
-        <option value="combination">Mixta</option>
-        <option value="sensitive">Sensible</option>
-        <option value="normal">Normal</option>
-        <option value="all">Todas</option>
-      </select>
-      <label class="text-sm text-stone-600 flex items-center gap-2">
-        <input id="handmade" type="checkbox" class="accent-brand-600" /> Hecho a mano
-      </label>
-      <label class="text-sm text-stone-600 flex items-center gap-2">
-        <input id="organic" type="checkbox" class="accent-brand-600" /> Organico
-      </label>
-      <label class="text-sm text-stone-600 flex items-center gap-2">
-        <input id="available" type="checkbox" checked class="accent-brand-600" /> En stock
-      </label>
-    </section>
-
-    <main
-      id="catalog"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6"
-    ></main>
-
-    <aside
-      id="cartPanel"
-      class="fixed top-0 right-0 w-[360px] max-w-[90vw] h-full bg-white shadow-2xl z-30 flex flex-col transition-transform duration-300 translate-x-full"
-    >
-      <div class="flex justify-between items-center p-4 border-b border-stone-200">
-        <h2 class="text-lg font-semibold">Tu carrito</h2>
-        <button id="closeCart" class="text-stone-500 hover:text-stone-800 text-xl leading-none">✕</button>
-      </div>
-      <div id="cartItems" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3"></div>
-      <div class="p-4 border-t border-stone-200">
-        <div class="flex justify-between items-center text-base mb-3">
-          <span>Total</span>
-          <strong id="cartTotalBig">$0</strong>
+        <div
+          class="absolute inset-0 opacity-20"
+          style="
+            background-image: radial-gradient(
+              circle at 20% 30%,
+              #f6f1e7 0,
+              transparent 45%
+            ),
+            radial-gradient(circle at 80% 70%, #4b7b53 0, transparent 50%);
+          "
+        ></div>
+        <div class="relative max-w-7xl mx-auto px-6 py-32 grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <p
+              class="uppercase tracking-[0.3em] text-amber-200/90 text-xs font-semibold mb-6"
+            >
+              Desde el bosque, para tu piel
+            </p>
+            <h1
+              class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight text-white"
+            >
+              Cosmetica artesanal<br />
+              <span class="text-amber-200">hecha a mano</span>, en lotes pequenos.
+            </h1>
+            <p class="mt-6 text-lg text-stone-200/90 max-w-xl leading-relaxed">
+              elaborated con aceite de oliva, manteca de karite y esencias
+              naturales. Sin sulfatos, sin parabenos y sin envase de plastico.
+              Cada lote lleva su codigo de trazabilidad.
+            </p>
+            <div class="mt-9 flex flex-wrap gap-4">
+              <a
+                href="#catalogo"
+                class="rounded-lg bg-brand-600 text-white px-7 py-3.5 font-semibold hover:bg-brand-700 transition shadow-lg"
+              >
+                Ver catalogo
+              </a>
+              <a
+                href="#proceso"
+                class="rounded-lg border border-white/40 text-white px-7 py-3.5 font-semibold hover:bg-white/10 transition"
+              >
+                Como lo hacemos
+              </a>
+            </div>
+            <dl class="mt-14 grid grid-cols-3 gap-6 max-w-lg">
+              <div>
+                <dt class="text-stone-300 text-sm">Productos</dt>
+                <dd class="text-3xl font-extrabold text-white">10</dd>
+              </div>
+              <div>
+                <dt class="text-stone-300 text-sm">Lotes trazables</dt>
+                <dd class="text-3xl font-extrabold text-white">100%</dd>
+              </div>
+              <div>
+                <dt class="text-stone-300 text-sm">Envase plastico</dt>
+                <dd class="text-3xl font-extrabold text-white">0</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="hidden lg:block">
+            <div
+              class="grid grid-cols-2 gap-4 max-w-md ml-auto"
+            >
+              <div
+                class="rounded-2xl bg-white/10 backdrop-blur border border-white/15 p-8 text-center"
+              >
+                <div class="text-5xl mb-3" aria-hidden="true">🧼</div>
+                <p class="text-white font-semibold">Jabones</p>
+                <p class="text-stone-300 text-sm mt-1">Curados 4 semanas</p>
+              </div>
+              <div
+                class="rounded-2xl bg-white/10 backdrop-blur border border-white/15 p-8 text-center mt-8"
+              >
+                <div class="text-5xl mb-3" aria-hidden="true">🌿</div>
+                <p class="text-white font-semibold">Botanicos</p>
+                <p class="text-stone-300 text-sm mt-1"> Aceites propios</p>
+              </div>
+              <div
+                class="rounded-2xl bg-white/10 backdrop-blur border border-white/15 p-8 text-center -mt-4"
+              >
+                <div class="text-5xl mb-3" aria-hidden="true">🫧</div>
+                <p class="text-white font-semibold">Sin veganos</p>
+                <p class="text-stone-300 text-sm mt-1">Curacion natural</p>
+              </div>
+              <div
+                class="rounded-2xl bg-white/10 backdrop-blur border border-white/15 p-8 text-center"
+              >
+                <div class="text-5xl mb-3" aria-hidden="true">📦</div>
+                <p class="text-white font-semibold">Compostable</p>
+                <p class="text-stone-300 text-sm mt-1">Papel kraft</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <button
-          id="checkoutBtn"
-          class="w-full bg-brand-800 text-white py-3 rounded-lg font-bold hover:bg-brand-700 transition"
-        >
-          Pagar
-        </button>
-        <p id="checkoutMsg" class="text-sm text-center mt-3"></p>
+      </section>
+
+      <section id="valores" class="py-20 sm:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="text-center max-w-2xl mx-auto reveal">
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+              Por que elegirnos
+            </h2>
+            <p class="mt-4 text-stone-600">
+              No revendemos formulas de fabrica. Producimos en lotes pequenos y
+              declaramos cada ingrediente.
+            </p>
+          </div>
+          <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <article
+              class="rounded-2xl border border-stone-200 p-7 hover:shadow-lg transition reveal"
+            >
+              <div class="text-4xl mb-4" aria-hidden="true">🌱</div>
+              <h3 class="text-lg font-bold mb-2">Ingredientes nobles</h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Aceite de oliva, manteca de cacao, karite y esencias
+                botanicas. Sin derivados de petroleo.
+              </p>
+            </article>
+            <article
+              class="rounded-2xl border border-stone-200 p-7 hover:shadow-lg transition reveal"
+            >
+              <div class="text-4xl mb-4" aria-hidden="true">🧪</div>
+              <h3 class="text-lg font-bold mb-2">Formulas propias</h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Desarrollamos cada receta en el taller y la ajustamos tras
+                prueba con clientes reales.
+              </p>
+            </article>
+            <article
+              class="rounded-2xl border border-stone-200 p-7 hover:shadow-lg transition reveal"
+            >
+              <div class="text-4xl mb-4" aria-hidden="true">🏷️</div>
+              <h3 class="text-lg font-bold mb-2">Lote trazable</h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Cada soap lleva un codigo como
+                <code class="text-xs bg-stone-100 px-1.5 py-0.5 rounded">LOT-LAV-01</code>.
+                Sabes cuando se hizo y con que lote de aceite.
+              </p>
+            </article>
+            <article
+              class="rounded-2xl border border-stone-200 p-7 hover:shadow-lg transition reveal"
+            >
+              <div class="text-4xl mb-4" aria-hidden="true">♻️</div>
+              <h3 class="text-lg font-bold mb-2">Zero plastico</h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                envoltorio en papel kraft y bolsa compostable. Nada de
+                plastico.
+              </p>
+            </article>
+            <article
+              class="rounded-2xl border border-stone-200 p-7 hover:shadow-lg transition reveal"
+            >
+              <div class="text-4xl mb-4" aria-hidden="true">🤲</div>
+              <h3 class="text-lg font-bold mb-2">Hecho a mano</h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Cortamos, mezclamos, curamos y empacamos nosotros. Nunca
+                produccion masiva.
+              </p>
+            </article>
+            <article
+              class="rounded-2xl border border-stone-200 p-7 hover:shadow-lg transition reveal"
+            >
+              <div class="text-4xl mb-4" aria-hidden="true">💬</div>
+              <h3 class="text-lg font-bold mb-2">Asesoria honesta</h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Si un producto no le sirve a tu piel, te decimos. Preferimos
+                perder una venta antes que una cliente.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="catalogo" class="py-20 sm:py-24">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="text-center max-w-2xl mx-auto reveal">
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+              Nuestro catalogo
+            </h2>
+            <p class="mt-4 text-stone-600">
+              Diez referencias en stock permanente. Precios en pesos
+              colombianos (COP).
+            </p>
+          </div>
+
+          <div
+            class="mt-12 flex flex-wrap items-center gap-4 justify-center reveal"
+          >
+            <input
+              id="search"
+              type="search"
+              placeholder="Buscar producto o ingrediente..."
+              class="min-w-[240px] flex-1 max-w-sm border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-600"
+            />
+            <select
+              id="skin"
+              class="border border-stone-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-600"
+            >
+              <option value="">Todo tipo de piel</option>
+              <option value="dry">Seca</option>
+              <option value="oily">Grasa</option>
+              <option value="combination">Mixta</option>
+              <option value="sensitive">Sensible</option>
+              <option value="normal">Normal</option>
+              <option value="all">Todas</option>
+            </select>
+            <label class="text-sm text-stone-600 flex items-center gap-2">
+              <input
+                id="handmade"
+                type="checkbox"
+                class="accent-brand-600"
+                checked
+              />
+              Hecho a mano
+            </label>
+            <label class="text-sm text-stone-600 flex items-center gap-2">
+              <input id="organic" type="checkbox" class="accent-brand-600" />
+              Organico
+            </label>
+            <label class="text-sm text-stone-600 flex items-center gap-2">
+              <input id="available" type="checkbox" class="accent-brand-600" />
+              Solo en stock
+            </label>
+          </div>
+
+          <p id="catalogCount" class="mt-5 text-center text-sm text-stone-500"></p>
+          <div
+            id="catalog"
+            class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          ></div>
+        </div>
+      </section>
+
+      <section id="proceso" class="py-20 sm:py-24 bg-brand-900 text-white">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="text-center max-w-2xl mx-auto reveal">
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+              De la hoja al soap
+            </h2>
+            <p class="mt-4 text-stone-300">
+              Cuatro pasos, siempre los mismos. La curacion no se apresura.
+            </p>
+          </div>
+          <ol class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <li class="rounded-2xl bg-white/5 border border-white/10 p-7 reveal">
+              <span class="text-amber-300 font-mono text-sm">01</span>
+              <h3 class="text-lg font-bold mt-3">Seleccion botanica</h3>
+              <p class="text-stone-300 text-sm mt-2 leading-relaxed">
+                Compramos hoja, flor y raiz a productores de la region y
+                verificamos cada partida.
+              </p>
+            </li>
+            <li class="rounded-2xl bg-white/5 border border-white/10 p-7 reveal">
+              <span class="text-amber-300 font-mono text-sm">02</span>
+              <h3 class="text-lg font-bold mt-3">Molienda y mezcla</h3>
+              <p class="text-stone-300 text-sm mt-2 leading-relaxed">
+                Trituramos en frio para no perder los aceites esenciales y
+                mezclamos a mano.
+              </p>
+            </li>
+            <li class="rounded-2xl bg-white/5 border border-white/10 p-7 reveal">
+              <span class="text-amber-300 font-mono text-sm">03</span>
+              <h3 class="text-lg font-bold mt-3">Curacion de 4 semanas</h3>
+              <p class="text-stone-300 text-sm mt-2 leading-relaxed">
+                Reposamos cada barra. Un soap curado dura mas en el jabonera y
+                espuma mejor.
+              </p>
+            </li>
+            <li class="rounded-2xl bg-white/5 border border-white/10 p-7 reveal">
+              <span class="text-amber-300 font-mono text-sm">04</span>
+              <h3 class="text-lg font-bold mt-3">Empaque y lote</h3>
+              <p class="text-stone-300 text-sm mt-2 leading-relaxed">
+                Sello, pesamos y etiquetamos con el codigo de lote. Luego
+                espera tu pedido.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="py-20 sm:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="text-center max-w-2xl mx-auto reveal">
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+              Quienes ya nos prueban
+            </h2>
+            <p class="mt-4 text-stone-600">
+              Resenas de clientas de la tienda fisica y pedidos por
+              domicilio.
+            </p>
+          </div>
+          <div class="mt-14 grid md:grid-cols-3 gap-6">
+            <figure
+              class="rounded-2xl border border-stone-200 p-7 flex flex-col reveal"
+            >
+              <div class="text-amber-400 text-lg" aria-label="5 estrellas">
+                ★★★★★
+              </div>
+              <blockquote class="mt-4 text-stone-700 leading-relaxed flex-1">
+                "La lavanda me salvo la piel en invierno. Llego en dos dias y
+                el empaque es puro papel."
+              </blockquote>
+              <figcaption class="mt-5 text-sm text-stone-500">
+                Camila R. · Medellin
+              </figcaption>
+            </figure>
+            <figure
+              class="rounded-2xl border border-stone-200 p-7 flex flex-col reveal"
+            >
+              <div class="text-amber-400 text-lg" aria-label="5 estrellas">
+                ★★★★★
+              </div>
+              <blockquote class="mt-4 text-stone-700 leading-relaxed flex-1">
+                "Compre el carbon activado por la grasa y la verdad, se nota el
+                cambio en dos semanas."
+              </blockquote>
+              <figcaption class="mt-5 text-sm text-stone-500">
+                Diego M. · Cali
+              </figcaption>
+            </figure>
+            <figure
+              class="rounded-2xl border border-stone-200 p-7 flex flex-col reveal"
+            >
+              <div class="text-amber-400 text-lg" aria-label="5 estrellas">
+                ★★★★☆
+              </div>
+              <blockquote class="mt-4 text-stone-700 leading-relaxed flex-1">
+                "Me cambiaron el lote sin avisar, pero me explico todo. El
+                balsamo de cacao es increible."
+              </blockquote>
+              <figcaption class="mt-5 text-sm text-stone-500">
+                Valentina S. · Bogotá
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" class="py-20 sm:py-24">
+        <div class="max-w-3xl mx-auto px-6">
+          <div class="text-center reveal">
+            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+              Preguntas frecuentes
+            </h2>
+          </div>
+          <div class="mt-12 space-y-4">
+            <details
+              class="group border border-stone-200 rounded-xl p-6 bg-white open:shadow-md transition reveal"
+            >
+              <summary
+                class="cursor-pointer font-semibold flex items-center justify-between list-none"
+              >
+                <span>¿Como pido?</span>
+                <span
+                  class="text-brand-600 group-open:rotate-45 transition text-xl leading-none"
+                  >+</span
+                >
+              </summary>
+              <p class="mt-4 text-stone-600 text-sm leading-relaxed">
+                Escribenos por el formulario de contacto o al WhatsApp. Te
+                confirmamos disponibilidad y envio a todo el pais.
+              </p>
+            </details>
+            <details
+              class="group border border-stone-200 rounded-xl p-6 bg-white open:shadow-md transition reveal"
+            >
+              <summary
+                class="cursor-pointer font-semibold flex items-center justify-between list-none"
+              >
+                <span>¿Cuanto dura un soap?</span>
+                <span
+                  class="text-brand-600 group-open:rotate-45 transition text-xl leading-none"
+                  >+</span
+                >
+              </summary>
+              <p class="mt-4 text-stone-600 text-sm leading-relaxed">
+                Entre 2 y 3 meses con jabonera que drene. Guardalo lejos del
+                agua encharcada para que durable mas.
+              </p>
+            </details>
+            <details
+              class="group border border-stone-200 rounded-xl p-6 bg-white open:shadow-md transition reveal"
+            >
+              <summary
+                class="cursor-pointer font-semibold flex items-center justify-between list-none"
+              >
+                <span>¿Sirven para piel sensible?</span>
+                <span
+                  class="text-brand-600 group-open:rotate-45 transition text-xl leading-none"
+                  >+</span
+                >
+              </summary>
+              <p class="mt-4 text-stone-600 text-sm leading-relaxed">
+                Si. La lavanda y la calendula estan pensadas para piel
+                sensible. Haz siempre una prueba en la muneca.
+              </p>
+            </details>
+            <details
+              class="group border border-stone-200 rounded-xl p-6 bg-white open:shadow-md transition reveal"
+            >
+              <summary
+                class="cursor-pointer font-semibold flex items-center justify-between list-none"
+              >
+                <span>¿Hacen pedidos al exterior?</span>
+                <span
+                  class="text-brand-600 group-open:rotate-45 transition text-xl leading-none"
+                  >+</span
+                >
+              </summary>
+              <p class="mt-4 text-stone-600 text-sm leading-relaxed">
+                Por ahora solo dentro de Colombia. El internacional esta en
+                camino para 2027.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section id="contacto" class="py-20 sm:py-24 bg-brand-800 text-white">
+        <div class="max-w-3xl mx-auto px-6 text-center reveal">
+          <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+            ¿Te animas a probar?
+          </h2>
+          <p class="mt-4 text-stone-200">
+            Escribenos y tevation que jabon o bálsamo encaja con tu piel. Sin
+            compromiso.
+          </p>
+          <form id="leadForm" class="mt-10 grid sm:grid-cols-2 gap-4 text-left">
+            <input
+              type="text"
+              id="leadName"
+              required
+              placeholder="Tu nombre"
+              class="rounded-lg px-4 py-3 bg-white/10 border border-white/20 text-white placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-200"
+            />
+            <input
+              type="email"
+              id="leadEmail"
+              required
+              placeholder="tu@correo.com"
+              class="rounded-lg px-4 py-3 bg-white/10 border border-white/20 text-white placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-200"
+            />
+            <textarea
+              id="leadMessage"
+              rows="4"
+              required
+              placeholder="¿Qué te gustaría saber?"
+              class="sm:col-span-2 rounded-lg px-4 py-3 bg-white/10 border border-white/20 text-white placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-200"
+            ></textarea>
+            <button
+              type="submit"
+              class="sm:col-span-2 rounded-lg bg-amber-300 text-brand-900 font-bold py-3.5 hover:bg-amber-200 transition"
+            >
+              Enviar mensaje
+            </button>
+            <p id="leadMsg" class="sm:col-span-2 text-center text-sm"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-brand-900 text-stone-400 py-12">
+      <div
+        class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+      >
+        <p class="text-sm">
+          © <span id="year"></span> Jabones del Bosque. Cosmetica artesanal.
+        </p>
+        <nav class="flex gap-6 text-sm">
+          <a href="#valores" class="hover:text-amber-200 transition">Propuesta</a>
+          <a href="#catalogo" class="hover:text-amber-200 transition">Catalogo</a>
+          <a href="#contacto" class="hover:text-amber-200 transition">Contacto</a>
+        </nav>
       </div>
-    </aside>
-    <div id="overlay" class="fixed inset-0 bg-black/30 z-20 hidden"></div>
+    </footer>
 
     <script src="/app.js"></script>
   </body>
