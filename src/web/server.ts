@@ -11,6 +11,7 @@ import { FilterProducts } from "../catalog/domain/usecases/FilterProducts";
 import { InMemoryCartRepository } from "../cart/infrastructure/InMemoryCartRepository";
 import { AddItemToCart } from "../cart/domain/usecases/AddItemToCart";
 import { GetCart } from "../cart/domain/usecases/GetCart";
+import { RemoveItemFromCart } from "../cart/domain/usecases/RemoveItemFromCart";
 
 import { InMemoryCustomerRepository } from "../customers/infrastructure/InMemoryCustomerRepository";
 import { Customer } from "../customers/domain/entities/Customer";
@@ -47,6 +48,7 @@ function bootstrap() {
   const filterProducts = new FilterProducts(productRepo);
   const addItemToCart = new AddItemToCart(cartRepo, productRepo);
   const getCart = new GetCart(cartRepo);
+  const removeItemFromCart = new RemoveItemFromCart(cartRepo);
   const processCheckout = new ProcessCheckout(
     cartRepo,
     customerRepo,
@@ -121,6 +123,20 @@ function bootstrap() {
     }
     res.json(view);
   });
+
+  app.delete(
+    "/api/cart/:cartId/items/:productId",
+    async (req: Request, res: Response) => {
+      try {
+        const { cartId, productId } = req.params;
+        const cart = await removeItemFromCart.execute({ cartId, productId });
+        const view = await getCart.execute(cart.id);
+        res.json(view);
+      } catch (err) {
+        res.status(400).json({ error: (err as Error).message });
+      }
+    },
+  );
 
   app.post("/api/checkout", async (req: Request, res: Response) => {
     try {

@@ -101,7 +101,7 @@ soap-ecommerce/
 │   ├── cart/
 │   │   ├── domain/entities/Cart.ts, CartItem.ts
 │   │   ├── domain/repositories/CartRepository.ts
-│   │   ├── domain/usecases/AddItemToCart.ts, GetCart.ts
+│   │   ├── domain/usecases/AddItemToCart.ts, GetCart.ts, RemoveItemFromCart.ts
 │   │   └── infrastructure/InMemoryCartRepository.ts
 │   ├── checkout/
 │   │   ├── domain/entities/Order.ts, OrderItem.ts
@@ -241,6 +241,7 @@ PaymentResult  = { success: boolean; transactionId: string; message: string }
 | FilterProducts | `execute(criteria: ProductFilterCriteria): Promise<{ products, total }>` | delega en `repo.search(criteria)` |
 | AddItemToCart | `execute(input: { cartId, customerId, productId, quantity }): Promise<Cart>` | `quantity > 0`; producto existe; **valida stock** antes de agregar; crea carrito si no existe; mergea por producto |
 | GetCart | `execute(cartId): Promise<GetCartResult \| null>` | vista serializable (items + total) |
+| RemoveItemFromCart | `execute(input: { cartId, productId }): Promise<Cart>` | carrito existe; item existe; lo elimina y guarda. Errores: `Carrito no encontrado.` / `El articulo no esta en el carrito.` |
 | ProcessCheckout | `execute(input: { cartId, customerId }): Promise<{ orderId, status, total, transactionId? }>` | carrito existe y no vacío; cliente existe; construye Order; cobra vía `PaymentGateway`; éxito → `markAsPaid`, fallo → `markAsFailed`; guarda la orden siempre |
 
 **Detalles de AddItemToCart:** mensajes de error existentes:
@@ -268,6 +269,7 @@ Cliente demo fijo: `c1` (`DEFAULT_CUSTOMER_ID`), provisto en seed.
 | GET | `/api/products` | query: `search`, `skin`(SkinType), `category`, `handmade=true`, `organic=true`, `available=true` | `{ total, products[] }` | 400 `{error}` |
 | POST | `/api/cart/items` | `{ cartId, productId, quantity }` | vista del carrito (GetCartResult) | 400 `{error}` |
 | GET | `/api/cart/:cartId` | — | GetCartResult | 404 `{ error }` |
+| DELETE | `/api/cart/:cartId/items/:productId` | — | vista del carrito actualizada | 400 `{error}` (carrito o item inexistentes) |
 | POST | `/api/checkout` | `{ cartId }` | `{ orderId, status, total: {amount,currency}, transactionId? }` | 400 `{error}` |
 
 **Shape de producto en `/api/products`:** `{ id, name, description, price: {amount,currency},
@@ -357,6 +359,7 @@ Todos `handmade: true`, `active: true`, e imágenes SVG en `PRODUCT_IMAGES`.
 10. Estados de orden: pending -> paid | failed (cancelled reservado).
 11. La orden se persiste AUNQUE el pago falle (estado `failed`).
 12. El frontend no inventa datos: consume la API; `image` tiene fallback.
+13. Se puede eliminar un item concreto (por `productId`) del carrito; eliminar el único item lo deja vacío (`isEmpty`, total 0).
 
 ---
 

@@ -19,6 +19,12 @@ export class Cart {
     this.items.push(item);
   }
 
+  removeItem(productId: string): boolean {
+    const before = this.items.length;
+    this.items = this.items.filter((i) => i.productId !== productId);
+    return this.items.length < before;
+  }
+
   getItems(): readonly CartItem[] {
     return [...this.items];
   }

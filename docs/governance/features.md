@@ -33,6 +33,7 @@
 | F-CAR-004 | Exponer vista serializable del carrito | `GetCart`, `GetCartResult` | Lógica de negocio |
 | F-CAR-005 | Prohibir cantidades no positivas | `CartItem.fromProduct` | Regla de dominio |
 | F-CAR-006 | Persistencia del carrito (memoria / TypeORM target) | `InMemoryCartRepository` | Persistencia |
+| F-CAR-007 | Eliminar un item del carrito por producto | `RemoveItemFromCart`, `Cart.removeItem`, `DELETE /api/cart/:cartId/items/:productId` | Lógica + API |
 
 ### 1.3 Módulo: `checkout/` — Checkout y órdenes
 
@@ -68,6 +69,7 @@
 | F-WEB-001 | Endpoint `GET /api/products` con filtros vía query | `server.ts`, `FilterProducts` | API |
 | F-WEB-002 | Endpoint `POST /api/cart/items` (agregar al carrito) | `server.ts`, `AddItemToCart` | API |
 | F-WEB-003 | Endpoint `GET /api/cart/:cartId` (vista del carrito) | `server.ts`, `GetCart` | API |
+| F-WEB-008 | Endpoint `DELETE /api/cart/:cartId/items/:productId` (eliminar item del carrito) | `server.ts`, `RemoveItemFromCart` | API |
 | F-WEB-004 | Endpoint `POST /api/checkout` (generar orden) | `server.ts`, `ProcessCheckout` | API |
 | F-WEB-005 | Seed del catálogo demo (10 productos + imágenes SVG) | `seed.ts`, `PRODUCT_IMAGES` | Datos demo |
 | F-WEB-006 | Cliente demo fijo (`c1`) | `seed.ts` | Datos demo |
@@ -152,6 +154,13 @@ Formato BDD: **Dado / Cuando / Entonces**. Se incluye el criterio técnico asoci
 - [Vigente] Dado el repositorio en memoria, cuando se guarda un carrito, entonces persiste mientras el proceso esté vivo (se resetea al reiniciar `npm start`).
 - [Propuesto] Técnico: la migración TypeORM de carrito/órdenes debe respetar `exactOptionalPropertyTypes`.
 
+**F-CAR-007 — Eliminar item del carrito** [Vigente]
+- Dado un carrito con un item `productId` concreto, cuando se ejecuta `DELETE /api/cart/:cartId/items/:productId`, entonces el item se elimina, el total y el contador se recalculan y la API devuelve la vista actualizada.
+- Dado un carrito inexistente, cuando se elimina un item, entonces falla con `Carrito no encontrado.` y 400.
+- Dado un item que no está en el carrito, cuando se intenta eliminar, entonces falla con `El articulo no esta en el carrito.` y 400.
+- Dado el único item del carrito, cuando se elimina, entonces el carrito queda vacío (`isEmpty=true`, total 0).
+- Desde la UI: cada fila del drawer muestra un botón ✕ (rojo); al pulsarlo, la fila se quita sin perder el `cartId` local.
+
 ### 2.3 Checkout y órdenes
 
 **F-CHK-001 — Checkout exitoso**
@@ -203,6 +212,7 @@ Formato BDD: **Dado / Cuando / Entonces**. Se incluye el criterio técnico asoci
 - `GET /api/products` → 200 `{total, products[]}` | 400 `{error}`
 - `POST /api/cart/items` body `{cartId, productId, quantity}` → 200 vista carrito | 400 `{error}`
 - `GET /api/cart/:cartId` → 200 GetCartResult | 404 `{error}`
+- `DELETE /api/cart/:cartId/items/:productId` → 200 vista carrito actualizada | 400 `{error}`
 - `POST /api/checkout` body `{cartId}` → 200 `{orderId, status, total, transactionId?}` | 400 `{error}`
 - [Propuesto] Técnico: añadir validación de DTO en los bordes HTTP (hoy se valida solo en el dominio).
 
@@ -238,13 +248,13 @@ Formato BDD: **Dado / Cuando / Entonces**. Se incluye el criterio técnico asoci
 |---|---|
 | `src/catalog/domain/**` | F-CAT-001 a F-CAT-005, F-CAT-007 |
 | `src/catalog/infrastructure/**` · `infrastructure/persistence/typeorm/**` | F-CAT-006, F-TOR-001, F-TOR-002 |
-| `src/cart/domain/**` | F-CAR-002 a F-CAR-005 |
+| `src/cart/domain/**` | F-CAR-002 a F-CAR-005, F-CAR-007 |
 | `src/cart/infrastructure/**` | F-CAR-006 |
 | `src/checkout/domain/**` | F-CHK-001 a F-CHK-007 |
 | `src/checkout/infrastructure/**` | F-CHK-008, F-PAY-001 |
 | `src/customers/**` | F-CUS-001 |
 | `src/shared/domain/**` | F-SHR-001, F-SHR-002 |
-| `src/web/server.ts` | F-WEB-001 a F-WEB-004, F-WEB-007 |
+| `src/web/server.ts` | F-WEB-001 a F-WEB-004, F-WEB-007, F-WEB-008 |
 | `src/web/seed.ts` | F-WEB-005, F-WEB-006 |
 | `public/app.js` | F-UI-001 a F-UI-007 |
 | `public/index.html` | F-UI-001 a F-UI-004 |
